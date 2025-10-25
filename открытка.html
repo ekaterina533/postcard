@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Свадебная открытка</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #fff5f5 0%, #f0f8ff 100%);
+            overflow: hidden;
+            color: #5a3d5c;
+            padding: 20px;
+        }
+        
+        .card-container {
+            perspective: 1500px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+        }
+        
+        .card {
+            position: relative;
+            transform-style: preserve-3d;
+            transition: transform 1.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+            cursor: pointer;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+            width: 600px;
+            height: 1000px;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+        
+        .card.flipped {
+            transform: rotateY(180deg);
+        }
+        
+        .card-face {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            top: 0;
+            left: 0;
+        }
+        
+        .card-front {
+            background: #fff;
+        }
+        
+        .card-back {
+            background: url(/открытка2.png) center center no-repeat;
+            background-size: cover;
+            transform: rotateY(180deg);
+            text-align: center;
+        }
+        
+        .card-image {
+            width: 80%;
+            height: 100%;
+            object-fit: cover;
+            top: 20px;
+            left: 0;
+            z-index: 1;
+            border-radius: 10px;
+        }
+        
+        .front-instruction {
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px 25px;
+            border-radius: 25px;
+            font-size: 1.3rem;
+            color: #8B0000;
+            font-weight: bold;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(5px);
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateX(-50%) translateY(0);
+            }
+            40% {
+                transform: translateX(-50%) translateY(-10px);
+            }
+            60% {
+                transform: translateX(-50%) translateY(-5px);
+            }
+        }
+        
+        .back-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2;
+            text-align: center;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 30px;
+            border-radius: 8px;
+            width: 90%;
+            max-height: 90%;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+            backdrop-filter: blur(5px);
+            overflow-y: none;
+            opacity: 0;
+            transform: translate(-50%, -50%) translateY(20px);
+            transition: all 1s ease 0.5s;
+        }
+        
+        .card.flipped .back-content {
+            opacity: 1;
+            transform: translate(-50%, -50%) translateY(0);
+            overflow: hidden;
+            overflow-y: auto;
+        }
+        
+        .greeting {
+            font-size: 2rem;
+            color: #8B0000;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(139, 0, 0, 0.2);
+        }
+        
+        .message {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            color: #5a4a5c;
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        
+        .signature {
+            font-size: 1.3rem;
+            color: #7a5c7c;
+            text-align: right;
+            margin-top: 25px;
+            font-style: italic;
+        }
+        
+        .instruction {
+            margin-top: 20px;
+            font-size: 1.1rem;
+            color: #8b7b8c;
+            font-style: italic;
+            text-align: center;
+        }
+        
+        .hearts {
+            font-size: 2rem;
+            color: #8B0000;
+            margin: 15px 0;
+            animation: pulse 1.5s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.7; }
+            50% { transform: scale(1.2); opacity: 1; }
+            100% { transform: scale(1); opacity: 0.7; }
+        }
+        
+        .music-controls {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+        
+        .music-btn {
+            background: rgba(139, 0, 0, 0.85);
+            border: none;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+        
+        .music-btn:hover {
+            background: rgba(139, 0, 0, 1);
+            transform: scale(1.1);
+        }
+        
+        .petals {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+        
+        .petal {
+            position: absolute;
+            background: rgba(139, 0, 0, 0.6);
+            border-radius: 50% 0 50% 50%;
+            transform: rotate(45deg);
+            animation: fall linear infinite;
+        }
+        
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+            }
+        }
+        
+        /* Адаптивность для мобильных устройств */
+        @media (max-width: 768px) {
+            .card {
+                width: 95vw;
+                height: 85vh;
+            }
+            
+            .greeting {
+                font-size: 1.6rem;
+            }
+            
+            .message {
+                font-size: 1rem;
+                line-height: 1.5;
+            }
+            
+            .signature {
+                font-size: 1.1rem;
+            }
+            
+            .back-content {
+                padding: 20px;
+                width: 95%;
+            }
+            
+            .hearts {
+                font-size: 1.6rem;
+            }
+            
+            .front-instruction {
+                font-size: 1.1rem;
+                padding: 12px 20px;
+                bottom: 20px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .card {
+                height: 80vh;
+            }
+            
+            .greeting {
+                font-size: 1.4rem;
+            }
+            
+            .message {
+                font-size: 0.9rem;
+                line-height: 1.4;
+            }
+            
+            .back-content {
+                padding: 15px;
+            }
+            
+            .music-btn {
+                width: 50px;
+                height: 50px;
+                font-size: 20px;
+            }
+            
+            .front-instruction {
+                font-size: 1rem;
+                padding: 10px 15px;
+                bottom: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="petals" id="petals"></div>
+    
+    <div class="card-container">
+        <div class="card" id="card">
+            <!-- Передняя сторона открытки -->
+            <div class="card-face card-front">
+                <img src='./открытка1.jpeg' alt="Свадебное изображение" class="card-image" id="frontImage">
+            </div>
+            
+            <!-- Обратная сторона открытки -->
+            <div class="card-face card-back">
+                <img src='./открытка2.png' alt="Свадебное изображение" class="card-image" id="backImage">
+                <div class="back-content">
+                    <div class="greeting">Дорогие Максим и Алёна!</div>
+                    <div class="hearts">♥</div>
+                    <div class="message">
+                        Поздравляю вас с днём вашей свадьбы! Это прекрасное событие знаменует начало нового этапа в вашей жизни. Желаю, чтобы ваши сердца всегда были наполнены гармонией, взаимным уважением и нежностью. Цените каждый момент, проведённый вместе, и пусть ваша связь с каждым годом становится только прочнее! Желаю, чтобы это чувство — сегодняшней лёгкости, доверия и радости от того, что вы рядом — оставалось с вами всегда. Чтобы вы помнили этот день и те чувства, которые сейчас переполняют вас.
+                        <br><br>
+                        И чтобы эти эмоции остались не только в памяти, я хочу подарить вам картину по вашему свадебному фото. Ту, какое выберете сами. Ту, где вы узнаёте себя — самых счастливых. Мы вместе подберём размер и стиль, чтобы она стала частью вашего дома и вашей истории.
+                        <br><br>
+                        Пусть она напоминает вам о самом главном.
+                    </div>
+                    <div class="signature">С любовью,<br>Ваша Екатерина.</div>
+                    <div class="instruction">Нажмите, чтобы закрыть открытку</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="music-controls">
+        <button class="music-btn" id="musicToggle">♪</button>
+    </div>
+    
+    <!-- Романтичная свадебная музыка -->
+    <audio id="backgroundMusic" loop>
+        <source src='./fd3114eaa0b8b3b.mp3' type="audio/mpeg">
+        Ваш браузер не поддерживает аудио элемент.
+    </audio>
+
+    <script>
+        const card = document.getElementById('card');
+        const musicToggle = document.getElementById('musicToggle');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+        const petalsContainer = document.getElementById('petals');
+        let isPlaying = false;
+        
+        // Создание падающих лепестков
+        function createPetals() {
+            for (let i = 0; i < 20; i++) {
+                setTimeout(() => {
+                    const petal = document.createElement('div');
+                    petal.classList.add('petal');
+                    
+                    const size = Math.random() * 12 + 4;
+                    petal.style.width = `${size}px`;
+                    petal.style.height = `${size}px`;
+                    
+                    petal.style.left = `${Math.random() * 100}vw`;
+                    
+                    const delay = Math.random() * 10;
+                    const duration = Math.random() * 10 + 8;
+                    
+                    petal.style.animationDelay = `${delay}s`;
+                    petal.style.animationDuration = `${duration}s`;
+                    
+                    const hue = Math.random() * 10 + 350;
+                    const saturation = Math.random() * 30 + 70;
+                    const lightness = Math.random() * 20 + 30;
+                    
+                    petal.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 0.7)`;
+                    
+                    petalsContainer.appendChild(petal);
+                }, i * 400);
+            }
+        }
+        
+        // Переворот открытки
+        card.addEventListener('click', function() {
+            this.classList.toggle('flipped');
+        });
+        
+        // Управление музыкой
+        musicToggle.addEventListener('click', function() {
+            if (isPlaying) {
+                backgroundMusic.pause();
+                musicToggle.textContent = '♪';
+            } else {
+                backgroundMusic.play().catch(e => {
+                    console.log("Автовоспроизведение заблокировано. Нажмите на кнопку музыки для воспроизведения.");
+                });
+                musicToggle.textContent = '❚❚';
+            }
+            isPlaying = !isPlaying;
+        });
+        
+        // Автовоспроизведение музыки
+        window.addEventListener('click', function() {
+            if (!isPlaying) {
+                backgroundMusic.play().then(() => {
+                    isPlaying = true;
+                    musicToggle.textContent = '❚❚';
+                }).catch(e => {
+                    console.log("Автовоспроизведение заблокировано. Нажмите на кнопку музыки для воспроизведения.");
+                });
+            }
+        }, { once: true });
+        
+        // Создание лепестков после загрузки страницы
+        window.addEventListener('load', createPetals);
+    </script>
+</body>
+</html>
