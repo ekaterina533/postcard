@@ -1,11 +1,4 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Свадебная открытка</title>
-    <style>
-        * {
+* {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -69,7 +62,7 @@
         }
         
         .card-back {
-            background: url(/открытка2.png) center center no-repeat;
+            background: url(./images/2.png) center center no-repeat;
             background-size: cover;
             transform: rotateY(180deg);
             text-align: center;
@@ -306,118 +299,3 @@
                 bottom: 15px;
             }
         }
-    </style>
-</head>
-<body>
-    <div class="petals" id="petals"></div>
-    
-    <div class="card-container">
-        <div class="card" id="card">
-            <!-- Передняя сторона открытки -->
-            <div class="card-face card-front">
-                <img src='./открытка1.jpeg' alt="Свадебное изображение" class="card-image" id="frontImage">
-            </div>
-            
-            <!-- Обратная сторона открытки -->
-            <div class="card-face card-back">
-                <img src='./открытка2.png' alt="Свадебное изображение" class="card-image" id="backImage">
-                <div class="back-content">
-                    <div class="greeting">Дорогие Максим и Алёна!</div>
-                    <div class="hearts">♥</div>
-                    <div class="message">
-                        Поздравляю вас с днём вашей свадьбы! Это прекрасное событие знаменует начало нового этапа в вашей жизни. Желаю, чтобы ваши сердца всегда были наполнены гармонией, взаимным уважением и нежностью. Цените каждый момент, проведённый вместе, и пусть ваша связь с каждым годом становится только прочнее! Желаю, чтобы это чувство — сегодняшней лёгкости, доверия и радости от того, что вы рядом — оставалось с вами всегда. Чтобы вы помнили этот день и те чувства, которые сейчас переполняют вас.
-                        <br><br>
-                        И чтобы эти эмоции остались не только в памяти, я хочу подарить вам картину по вашему свадебному фото. Ту, какое выберете сами. Ту, где вы узнаёте себя — самых счастливых. Мы вместе подберём размер и стиль, чтобы она стала частью вашего дома и вашей истории.
-                        <br><br>
-                        Пусть она напоминает вам о самом главном.
-                    </div>
-                    <div class="signature">С любовью,<br>Ваша Екатерина.</div>
-                    <div class="instruction">Нажмите, чтобы закрыть открытку</div>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="music-controls">
-        <button class="music-btn" id="musicToggle">♪</button>
-    </div>
-    
-    <!-- Романтичная свадебная музыка -->
-    <audio id="backgroundMusic" loop>
-        <source src='./fd3114eaa0b8b3b.mp3' type="audio/mpeg">
-        Ваш браузер не поддерживает аудио элемент.
-    </audio>
-
-    <script>
-        const card = document.getElementById('card');
-        const musicToggle = document.getElementById('musicToggle');
-        const backgroundMusic = document.getElementById('backgroundMusic');
-        const petalsContainer = document.getElementById('petals');
-        let isPlaying = false;
-        
-        // Создание падающих лепестков
-        function createPetals() {
-            for (let i = 0; i < 20; i++) {
-                setTimeout(() => {
-                    const petal = document.createElement('div');
-                    petal.classList.add('petal');
-                    
-                    const size = Math.random() * 12 + 4;
-                    petal.style.width = `${size}px`;
-                    petal.style.height = `${size}px`;
-                    
-                    petal.style.left = `${Math.random() * 100}vw`;
-                    
-                    const delay = Math.random() * 10;
-                    const duration = Math.random() * 10 + 8;
-                    
-                    petal.style.animationDelay = `${delay}s`;
-                    petal.style.animationDuration = `${duration}s`;
-                    
-                    const hue = Math.random() * 10 + 350;
-                    const saturation = Math.random() * 30 + 70;
-                    const lightness = Math.random() * 20 + 30;
-                    
-                    petal.style.backgroundColor = `hsla(${hue}, ${saturation}%, ${lightness}%, 0.7)`;
-                    
-                    petalsContainer.appendChild(petal);
-                }, i * 400);
-            }
-        }
-        
-        // Переворот открытки
-        card.addEventListener('click', function() {
-            this.classList.toggle('flipped');
-        });
-        
-        // Управление музыкой
-        musicToggle.addEventListener('click', function() {
-            if (isPlaying) {
-                backgroundMusic.pause();
-                musicToggle.textContent = '♪';
-            } else {
-                backgroundMusic.play().catch(e => {
-                    console.log("Автовоспроизведение заблокировано. Нажмите на кнопку музыки для воспроизведения.");
-                });
-                musicToggle.textContent = '❚❚';
-            }
-            isPlaying = !isPlaying;
-        });
-        
-        // Автовоспроизведение музыки
-        window.addEventListener('click', function() {
-            if (!isPlaying) {
-                backgroundMusic.play().then(() => {
-                    isPlaying = true;
-                    musicToggle.textContent = '❚❚';
-                }).catch(e => {
-                    console.log("Автовоспроизведение заблокировано. Нажмите на кнопку музыки для воспроизведения.");
-                });
-            }
-        }, { once: true });
-        
-        // Создание лепестков после загрузки страницы
-        window.addEventListener('load', createPetals);
-    </script>
-</body>
-</html>
